@@ -1,0 +1,196 @@
+:root {
+  font-size: 62.5%;
+
+  --nav-height: 7.2rem;
+
+  /* Color */
+  --black: #000;
+  --black-light: #555;
+  --red: #ff5a60;
+  --bg: #eee;
+}
+
+* {
+  margin: 0%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  font-size: 1.6rem;
+}
+
+.wrapper {
+  width: min(50rem, 100%);
+  margin-inline: auto;
+  padding-inline: 2.7rem;
+}
+
+button {
+  border: none;
+  background: none;
+}
+
+/* NAVIGATION ================================ */
+nav {
+  width: 100vw;
+  height: var(--nav-height);
+
+  display: flex;
+
+  position: fixed;
+  top: 0;
+}
+
+nav .wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 3.2rem;
+}
+
+/* MAIN ================================ */
+main .wrapper {
+  padding-top: calc(var(--nav-height) + 1.6rem);
+}
+
+.addNewTask,
+li {
+  display: grid;
+  column-gap: 1.6rem;
+  padding-block: 1.6rem;
+
+  grid-template-columns: min-content 1fr;
+
+  position: relative;
+}
+
+.addNewTask input[type="clicked"] {
+  width: 100%;
+}
+
+input[type="text"] {
+  width: 100%;
+
+  border: none;
+  outline: none;
+}
+
+input[type="text"],
+li span {
+  font-size: 2.4rem;
+  padding-right: 3.6rem;
+}
+
+li span {
+  word-break: break-all;
+}
+
+input:checked + span {
+  text-decoration: line-through;
+  color: var(--black-light);
+}
+
+input[type="checkbox"] {
+  width: 2.4rem;
+  height: 2.4rem;
+
+  appearance: none;
+
+  align-self: center;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+
+  display: block;
+}
+
+input[type="checkbox"] {
+  background-color: var(--black);
+  border-radius: 0.6rem;
+}
+
+.addNewTask button,
+li button {
+  position: absolute;
+  right: 0;
+  top: 1.75rem;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity 200ms;
+}
+
+.addNewTask button.show,
+.mainTask button.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mainTask > input[type="checkbox"]:checked {
+  background-color: var(--red);
+}
+
+.mainTask > input[type="checkbox"]:checked::before {
+  background: url("assets/checked-white.svg") center no-repeat;
+}
+
+.mainTask ul {
+  grid-column-start: 2;
+  margin-top: 0.8rem;
+}
+
+.subTask > input[type="checkbox"] {
+  background: url("assets/circle.svg") center no-repeat;
+}
+
+.subTask > input[type="checkbox"]:checked {
+  background: url("assets/checked-red.svg") center no-repeat;
+}
+
+.subTask:last-child {
+  padding-bottom: 0;
+}
+
+/* FIXED ADD BUTTON ================================ */
+
+.fixedAddButton {
+  display: flex;
+
+  position: fixed;
+  right: 5%;
+  bottom: 3rem;
+}
+
+.fixedAddButton button {
+  width: 4.8rem;
+  height: 4.8rem;
+
+  position: relative;
+}
+
+.fixedAddButton button::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  position: absolute;
+  top: 0;
+
+  background: url("assets/add-red.svg") center no-repeat;
+}
