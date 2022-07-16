@@ -38,6 +38,13 @@ button {
   background: none;
 }
 
+.show,
+.addNewTask button.show,
+#fixedDelete.show {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* NAVIGATION ================================ */
 nav {
   width: 100vw;
@@ -63,9 +70,31 @@ main .wrapper {
   padding-top: calc(var(--nav-height) + 1.6rem);
 }
 
+#mainUlIsEmpty {
+  padding-block: 1.6rem;
+  font-size: 2.4rem;
+}
+
+.invisible,
+#mainUlIsEmpty.invisible {
+  opacity: 0;
+  visibility: hidden;
+
+  position: absolute;
+}
+
 .addNewTask,
-li {
+#mainUlIsEmpty.hidden {
+  display: none;
+}
+
+.addNewTask.inputShowed,
+main li {
   display: grid;
+}
+
+.addNewTask,
+main li {
   column-gap: 1.6rem;
   padding-block: 1.6rem;
 
@@ -86,13 +115,9 @@ input[type="text"] {
 }
 
 input[type="text"],
-li span {
+main li span {
   font-size: 2.4rem;
   padding-right: 3.6rem;
-}
-
-li span {
-  word-break: break-all;
 }
 
 input:checked + span {
@@ -123,7 +148,7 @@ input[type="checkbox"] {
 }
 
 .addNewTask button,
-li button {
+main li button {
   position: absolute;
   right: 0;
   top: 1.75rem;
@@ -132,12 +157,6 @@ li button {
   visibility: hidden;
 
   transition: opacity 200ms;
-}
-
-.addNewTask button.show,
-.mainTask button.show {
-  opacity: 1;
-  visibility: visible;
 }
 
 .mainTask > input[type="checkbox"]:checked {
@@ -153,7 +172,8 @@ li button {
   margin-top: 0.8rem;
 }
 
-.subTask > input[type="checkbox"] {
+.subTask > input[type="checkbox"],
+.addNewSubTask > input[type="checkbox"] {
   background: url("assets/circle.svg") center no-repeat;
 }
 
@@ -165,9 +185,17 @@ li button {
   padding-bottom: 0;
 }
 
+.addNewSubTask {
+  display: flex;
+  gap: 1.6rem;
+  padding-top: 1.6rem;
+
+  background: none;
+}
+
 /* FIXED ADD BUTTON ================================ */
 
-.fixedAddButton {
+.fixedButton {
   display: flex;
 
   position: fixed;
@@ -175,14 +203,18 @@ li button {
   bottom: 3rem;
 }
 
-.fixedAddButton button {
+.fixedButton ul {
+  list-style: none;
+}
+
+.fixedButton button {
   width: 4.8rem;
   height: 4.8rem;
 
   position: relative;
 }
 
-.fixedAddButton button::before {
+.fixedButton button::before {
   content: "";
   width: 100%;
   height: 100%;
@@ -192,5 +224,25 @@ li button {
   position: absolute;
   top: 0;
 
+  transition: transform 200ms;
+}
+
+#fixedAdd::before {
   background: url("assets/add-red.svg") center no-repeat;
+}
+
+.fixedButton.inputShowed #fixedAdd::before {
+  transform: rotate(45deg);
+}
+
+#fixedDelete {
+  margin-bottom: 0.4rem;
+
+  opacity: 0;
+  visibility: hidden;
+}
+
+#fixedDelete::before {
+  background: url("assets/delete.svg") center no-repeat;
+  background-size: 3.6rem;
 }

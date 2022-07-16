@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>todo</title>
     <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
     <!-- JS -->
@@ -15,45 +15,35 @@
     <nav>
       <div class="wrapper">
         <div class="logo">
-          <h1>to<span style="color: var(--red)">do</span>s</h1>
+          <h1>to<span style="color: var(--red)">do</span></h1>
         </div>
       </div>
     </nav>
 
     <main>
       <div class="wrapper">
+        <p id="mainUlIsEmpty">Nothing yet.</p>
         <div class="addNewTask">
           <input type="checkbox" name="" id="" disabled />
           <input oninput="showButtonAdd()" type="text" id="newTaskInput" />
-          <button onclick="addNewTask()">
-            <img src="assets/add.svg" alt="" />
+          <button onclick="addNewTask()" id="addNewTaskButton">
+            <img src="assets/add.svg" alt="" id="addNewTaskImg" />
           </button>
         </div>
 
-        <ul id="mainUl">
-          <li class="mainTask">
-            <input type="checkbox" id="" />
-            <span>todo Lorem ipsum dolor sit amet</span>
-            <button onclick="addNewSubTask()">
-              <img src="assets/add.svg" alt="" />
-            </button>
-            <ul>
-              <li class="subTask">
-                <input type="checkbox" id="" />
-                <span>todo Lorem ipsum dolor sit amet</span>
-              </li>
-              <li class="subTask">
-                <input type="checkbox" id="" />
-                <span>todo Lorem ipsum dolor sit amet</span>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <ul id="mainUl"></ul>
       </div>
     </main>
 
-    <div class="fixedAddButton">
-      <button></button>
+    <div class="fixedButton">
+      <ul>
+        <li>
+          <button id="fixedDelete" onclick="deleteCheckedTask()"></button>
+        </li>
+        <li>
+          <button id="fixedAdd" onclick="showInputAddNewTask()"></button>
+        </li>
+      </ul>
     </div>
   </body>
 </html>
