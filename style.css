@@ -39,7 +39,6 @@ button {
 }
 
 .show,
-.addNewTask button.show,
 #fixedDelete.show {
   opacity: 1;
   visibility: visible;
@@ -117,7 +116,6 @@ input[type="text"] {
 input[type="text"],
 main li span {
   font-size: 2.4rem;
-  padding-right: 3.6rem;
 }
 
 input:checked + span {
@@ -147,7 +145,6 @@ input[type="checkbox"] {
   border-radius: 0.6rem;
 }
 
-.addNewTask button,
 main li button {
   position: absolute;
   right: 0;
@@ -159,38 +156,21 @@ main li button {
   transition: opacity 200ms;
 }
 
+.mainTask button:last-child {
+  right: 4rem;
+}
+
 .mainTask > input[type="checkbox"]:checked {
   background-color: var(--red);
 }
 
 .mainTask > input[type="checkbox"]:checked::before {
-  background: url("assets/checked-white.svg") center no-repeat;
+  background: url("assets/checked.svg") center no-repeat;
 }
 
 .mainTask ul {
   grid-column-start: 2;
   margin-top: 0.8rem;
-}
-
-.subTask > input[type="checkbox"],
-.addNewSubTask > input[type="checkbox"] {
-  background: url("assets/circle.svg") center no-repeat;
-}
-
-.subTask > input[type="checkbox"]:checked {
-  background: url("assets/checked-red.svg") center no-repeat;
-}
-
-.subTask:last-child {
-  padding-bottom: 0;
-}
-
-.addNewSubTask {
-  display: flex;
-  gap: 1.6rem;
-  padding-top: 1.6rem;
-
-  background: none;
 }
 
 /* FIXED ADD BUTTON ================================ */
@@ -228,7 +208,7 @@ main li button {
 }
 
 #fixedAdd::before {
-  background: url("assets/add-red.svg") center no-repeat;
+  background: url("assets/add.svg") center no-repeat;
 }
 
 .fixedButton.inputShowed #fixedAdd::before {
@@ -243,6 +223,6 @@ main li button {
 }
 
 #fixedDelete::before {
-  background: url("assets/delete.svg") center no-repeat;
+  background: url("assets/delete_red.svg") center no-repeat;
   background-size: 3.6rem;
 }

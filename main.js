@@ -1,21 +1,24 @@
 // VARIABLES =======================================
-let list = [],
+let list = JSON.parse(localStorage.getItem("tasks")) || [],
   timeoutNewSubTask = [],
-  idCount = 1,
+  idCount = list.length === 0 ? 1 : list[0].id + 1,
   inputHasFocus;
 
 const ul = document.querySelector("#mainUl");
 
 class Task {
-  constructor(id, task, subUl = []) {
+  constructor(id, task, check = false) {
     this.id = id;
     this.task = task;
-    this.subUl = subUl;
+    this.check = check;
   }
 }
 
+// UPDATES LIST ON HTML
+updateListOnHtml();
+
 // WINDOW EVENTS =======================================
-// any click after a new task input was on focus can cancel the input and hide it
+// ADDS A TASK IF HAS SOMETHING WRITTEN CLICKING OUTSIDE THE INPUT
 window.addEventListener("click", (event) => {
   if (document.activeElement == newTaskInput) {
     inputHasFocus = true;
@@ -23,15 +26,20 @@ window.addEventListener("click", (event) => {
   }
 
   if (inputHasFocus) {
+    inputHasFocus = false;
+
+    if (newTaskInput.value != "" && event.target == document.body) {
+      addNewTask();
+      return;
+    }
+
     if (!/addNewTaskButton|addNewTaskImg|fixedAdd/.test(event.target.id)) {
       fixedAdd.click();
     }
   }
-
-  inputHasFocus = false;
 });
 
-// Add a task with enter key
+// ADDS A TASK WITH ENTER KEY
 window.addEventListener("keydown", (event) => {
   if (document.activeElement.getAttribute("id") == "newTaskInput") {
     if (newTaskInput.value != "" && event.key == "Enter") {
@@ -40,6 +48,36 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+// FUNCTIONS =======================================
+// UPDATE LIST ON HTML
+function updateListOnHtml() {
+  ul.innerHTML = "";
+
+  list.forEach((task) => {
+    ul.innerHTML += `<li class="mainTask" id="t${task.id}">
+      <input type="checkbox" onclick="markCheckbox(${task.id})" ${
+      task.check ? "checked" : ""
+    } />
+      <span>${task.task}</span>
+      
+      
+      <button onclick="removeTask(${task.id})">
+      <img src="assets/delete.svg" alt="" />
+      </button>
+
+      <button onclick="editTask(${task.id})">
+      <img src="assets/edit.svg" alt="" />
+      </button>
+        
+      </li>`;
+  });
+
+  mainUlEmpty();
+  updateSpanToBeClickable();
+  showDeleteButton();
+}
+
+// IT SHOWS "Nothing yet." WHEN LIST IS EMPTY
 function mainUlEmpty() {
   if (list.length > 0) {
     mainUlIsEmpty.classList.add("hidden");
@@ -48,103 +86,77 @@ function mainUlEmpty() {
   }
 }
 
-// FUNCTIONS =======================================
-
+// ADD
 function addNewTask() {
-  let checkedList = taskChecked();
+  let id = idCount++,
+    task = new Task(id, newTaskInput.value);
 
-  let id = idCount++;
-  let task = new Task(id, newTaskInput.value);
   list.unshift(task);
 
   newTaskInput.value = "";
 
-  showButtonAdd();
-  updateListOnHtml(checkedList);
+  updateLocalStorage();
+  updateListOnHtml();
   showInputAddNewTask();
   inputHasFocus = false;
 }
 
-// function addNewSubTask() {}
+// EDIT
+function editTask(taskId) {
+  let span = document.querySelector(`#t${taskId} span`);
 
-function updateListOnHtml(checkedList = "") {
-  ul.innerHTML = "";
+  showInputAddNewTask();
+  newTaskInput.value = span.innerHTML;
 
-  list.forEach((task) => {
-    let checked = false;
-
-    for (let checkedTask of checkedList) {
-      if (task.id == checkedTask.id) {
-        checked = true;
-      }
-    }
-
-    ul.innerHTML += `<li class="mainTask" id="t${task.id}">
-      <input type="checkbox" onclick="showDeleteButton()" ${
-        checked ? "checked" : ""
-      } />
-      <span>${task.task}</span>
-      
-      
-      <button onclick="addNewSubTask()">
-      <img src="assets/add.svg" alt="" />
-      </button>
-      
-        
-      </li>`;
-  });
-
-  mainUlEmpty();
-  updateSpanToBeClickable();
+  removeTask(taskId);
 }
 
-// return a list of all the sub tasks of a task in html format
-function listSubUl(task) {
-  let subUlElement = "";
+// DELETE TASK
+function removeTask(taskId) {
+  let index = getIndex(taskId);
 
-  task.subUl.forEach((subTask) => {
-    subUlElement += `<li class="subTask" id="t${subTask.id}">
-    <input type="checkbox" onclick="showDeleteButton()" />
-    <span>${subTask.task}</span>
-    </li>`;
-  });
-
-  return subUlElement;
+  list.splice(index, 1);
+  updateLocalStorage();
+  updateListOnHtml();
 }
 
-// responsible to show the ADD button in front of the task
-function showButtonAdd(event = "") {
-  const newMainTaskButton = document.querySelector(".addNewTask button");
-
-  // When writing a task, it will show an ADD button to add the task being written.
-  if (event == "") {
-    newTaskInput.scrollLeft += newTaskInput.scrollWidth;
-
-    if (newTaskInput.value == "") {
-      newMainTaskButton.setAttribute("disabled", true);
-      newMainTaskButton.classList.remove("show");
-    } else {
-      newMainTaskButton.removeAttribute("disabled");
-      newMainTaskButton.classList.add("show");
+// GET INDEX
+function getIndex(id) {
+  for (let task of list) {
+    if (id === task.id) {
+      return list.indexOf(task);
     }
   }
-
-  // BUTTON IN NEW SUB TASK SPAN
-  /*if (event.type == "click") {
-    const taskId = event.composedPath()[1].getAttribute("id");
-    const newSubTaskButton = document.querySelector(`#${taskId} button`);
-
-    clearTimeout(timeoutNewSubTask[taskId]);
-
-    newSubTaskButton.classList.add("show");
-
-    timeoutNewSubTask[taskId] = setTimeout(() => {
-      newSubTaskButton.classList.remove("show");
-    }, 2000);
-  }*/
 }
 
-// any task's span is clickable
+// MARK CHECKBOX
+function markCheckbox(id) {
+  let task = list[getIndex(id)];
+  task.check = task.check ? false : true;
+  updateLocalStorage();
+  showDeleteButton();
+}
+
+// EDIT AND DELETE BUTTON IN TASK SPAN
+function showEditButton(event) {
+  const taskId = event.composedPath()[1].getAttribute("id");
+  const editButtons = document.querySelectorAll(`#${taskId} button`);
+  clearTimeout(timeoutNewSubTask[taskId]);
+
+  editButtons.forEach((e) => {
+    e.classList.add("show");
+  });
+
+  timeoutNewSubTask[taskId] = setTimeout(() => {
+    editButtons.forEach((e) => {
+      e.classList.remove("show");
+    });
+
+    timeoutNewSubTask = [];
+  }, 2000);
+}
+
+// TURNS ANY TASKS CLICKABLE TO SHOW EDIT AND DELETE BUTTON
 function updateSpanToBeClickable() {
   document.querySelectorAll(".mainTask > span").forEach((mainTask) => {
     mainTask.addEventListener("click", (event) => {
@@ -152,21 +164,22 @@ function updateSpanToBeClickable() {
         clickedTaskId = clickedTask.id;
 
       for (let task of list) {
-        if ("t" + task.id == clickedTaskId) {
-          showButtonAdd(event);
+        let taskElement = document.querySelector(`#t${task.id}`),
+          inputElement = document.querySelector(`#t${task.id} input`);
+
+        if (taskElement.id == clickedTaskId && !inputElement.checked) {
+          showEditButton(event);
         }
       }
     });
   });
 }
 
-// Show the input to add a new task
+// SHOW THE INPUT TO ADD A NEW TASK
 function showInputAddNewTask() {
   const fixedButton = document.querySelector(".fixedButton");
   const inputNewTask = document.querySelector(".addNewTask");
   const inputHasShowClass = inputNewTask.classList.contains("inputShowed");
-
-  showButtonAdd();
 
   if (!inputHasShowClass) {
     fixedButton.classList.add("inputShowed");
@@ -181,9 +194,9 @@ function showInputAddNewTask() {
   }
 }
 
-// When a task is checked, it shows the delete button
+// WHEN ANY TASK CHECKED, SHOWS DELETE BUTTON ON FIXED MENU
 function showDeleteButton() {
-  let checkedList = taskChecked() || [];
+  let checkedList = listTasksChecked() || [];
 
   if (checkedList.length) {
     fixedDelete.classList.add("show");
@@ -192,27 +205,27 @@ function showDeleteButton() {
   }
 }
 
-// Delete any checked task
+// DELETE ANY CHECKED TASK
 function deleteCheckedTask() {
-  let checkedList = taskChecked();
+  let checkedList = listTasksChecked();
 
   checkedList.forEach((e) => {
     list.splice(list.indexOf(e), 1);
   });
 
+  updateLocalStorage();
   updateListOnHtml();
   showDeleteButton();
 }
 
-// Return a list of checked tasks
-function taskChecked() {
-  if (ul.innerHTML != "") {
-    return list.filter((e) => {
-      let checkbox = document.querySelector(`li#t${e.id} input`);
-
-      if (checkbox.checked) {
-        return checkbox;
-      }
-    });
+// RETURN A LIST OF CHECKED TASKS
+function listTasksChecked() {
+  if (list.length !== 0) {
+    return list.filter((e) => e.check);
   }
+}
+
+// UPDATE LOCAL STORAGE
+function updateLocalStorage() {
+  localStorage.setItem("tasks", JSON.stringify(list));
 }
