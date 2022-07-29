@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>todo</title>
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/style.css" />
     <!-- JS -->
     <script defer src="main.js"></script>
   </head>
@@ -22,10 +22,12 @@
 
     <main>
       <div class="wrapper">
-        <p id="mainUlIsEmpty">Nothing yet.</p>
+        <p id="mainUlIsEmpty">
+          <input type="checkbox" name="" id="" disabled />comece algo
+        </p>
         <div class="addNewTask">
           <input type="checkbox" name="" id="" disabled />
-          <input type="text" id="newTaskInput" />
+          <input type="text" id="newTaskInput" placeholder="comece algo" />
         </div>
 
         <ul id="mainUl"></ul>

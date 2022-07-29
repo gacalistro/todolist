@@ -77,12 +77,14 @@ function updateListOnHtml() {
   showDeleteButton();
 }
 
-// IT SHOWS "Nothing yet." WHEN LIST IS EMPTY
+// IT SHOWS "comece algo" WHEN LIST IS EMPTY
 function mainUlEmpty() {
   if (list.length > 0) {
     mainUlIsEmpty.classList.add("hidden");
+    newTaskInput.placeholder = "...";
   } else {
     mainUlIsEmpty.classList.remove("hidden");
+    newTaskInput.placeholder = "comece algo";
   }
 }
 

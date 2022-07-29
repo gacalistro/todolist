@@ -25,6 +25,9 @@ body {
 body {
   font-family: sans-serif;
   font-size: 1.6rem;
+
+  background-color: #111111;
+  color: white;
 }
 
 .wrapper {
@@ -87,6 +90,13 @@ main .wrapper {
   display: none;
 }
 
+#mainUlIsEmpty {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  color: var(--black-light);
+}
+
 .addNewTask.inputShowed,
 main li {
   display: grid;
@@ -111,6 +121,8 @@ input[type="text"] {
 
   border: none;
   outline: none;
+  background: none;
+  color: white;
 }
 
 input[type="text"],
@@ -141,7 +153,7 @@ input[type="checkbox"]:checked::before {
 }
 
 input[type="checkbox"] {
-  background-color: var(--black);
+  background-color: var(--black-light);
   border-radius: 0.6rem;
 }
 
